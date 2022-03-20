@@ -3,15 +3,26 @@ import db from '.';
 import Match from './Match';
 
 export default class Club extends Model {
+  public id: number;
+
   public clubName: string;
 }
-
 Club.init({
-  clubName: DataTypes.STRING,
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  clubName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    field: 'club_name',
+  },
 }, {
   underscored: true,
   sequelize: db,
   timestamps: false,
+  modelName: 'club',
 });
 
 Match.belongsTo(Club, { foreignKey: 'id', as: 'home_team' });
