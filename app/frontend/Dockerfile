@@ -1,10 +1,12 @@
-FROM node:16-alpine as frontend
+FROM node:16-alpine AS frontend
 
 WORKDIR /frontend
 
-COPY . .
+COPY package.json .
 
 RUN npm install
+
+COPY . .
 
 EXPOSE 3000
 
