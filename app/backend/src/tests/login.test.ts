@@ -6,6 +6,7 @@ import { app } from '../app';
 import User from '../database/models/User';
 
 import { Response } from 'superagent';
+import { successLoginData, successUserMock, unsuccessLoginData, unsuccessPassword, unsuccesUserMock } from './mocks';
 
 chai.use(chaiHttp);
 
@@ -15,19 +16,6 @@ describe('Rota /login', () => {
 
   describe('Verifica se é possível fazer login com os dados corretos', () => {
     let chaiHttpResponse: Response;
-
-    const mock = {
-      id: 1,
-      username: 'Admin',
-      email: 'admin@admin.com',
-      password: '$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW',
-      role: 'admin',
-    };
-
-    const loginData = {
-      email: 'admin@admin.com',
-      password: 'secret_admin',
-    };
 
     const response = {
       user: {
@@ -40,8 +28,8 @@ describe('Rota /login', () => {
     };
 
     before(async () => {
-      sinon.stub(User, 'findOne').resolves(mock as User);
-      chaiHttpResponse = await chai.request(app).post('/login').send(loginData);
+      sinon.stub(User, 'findOne').resolves(successUserMock as User);
+      chaiHttpResponse = await chai.request(app).post('/login').send(successLoginData);
     });
 
     after(() => {
@@ -64,16 +52,11 @@ describe('Rota /login', () => {
   describe('Verifica que não é possível logar com um email invalido', () => {
     let chaiHttpResponse: Response;
 
-    const loginData = {
-      email: 'wronguser@admin.com',
-      password: '123456',
-    };
-
     const message = 'Incorrect email or password';
 
     before(async () => {
       sinon.stub(User, 'findOne').resolves(null);
-      chaiHttpResponse = await chai.request(app).post('/login').send(loginData);
+      chaiHttpResponse = await chai.request(app).post('/login').send(unsuccessLoginData);
     });
 
     after(() => {
@@ -85,34 +68,19 @@ describe('Rota /login', () => {
     });
   });
 
-  describe('Verifica que não é possível logar com uma senha inválida', () => {
+  describe('Verifica que não é possível logar com uma senha menor que 7', () => {
     let chaiHttpResponse: Response;
 
-    const loginData = {
-      email: 'admin@admin.com',
-      password: '123456',
-    };
-
-    const mock = {
-      id: 1,
-      username: 'Admin',
-      email: 'admin@admin.com',
-      password: '654321',
-      role: 'admin',
-    };
-
-    const message = 'Incorrect email or password';
-
     before(async () => {
-      sinon.stub(User, 'findOne').resolves(mock as User);
-      chaiHttpResponse = await chai.request(app).post('/login').send(loginData);
+      sinon.stub(User, 'findOne').resolves(null);
+      chaiHttpResponse = await chai.request(app).post('/login').send(unsuccessPassword);
     });
 
     after(() => {
       (User.findOne as sinon.SinonStub).restore();
     });
 
-    it('Recebe um status 401 quando a senha é invalida', () => {
+    it('Recebe um status 401 quando a senha é menor que 7', () => {
       expect(chaiHttpResponse.status).to.be.eq(401);
     });
   });
