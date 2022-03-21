@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcryptjs';
 import User from '../database/models/User';
 
 export default class LoginService {
@@ -7,7 +8,7 @@ export default class LoginService {
     });
     if (!user) return { message: 'Incorrect email or password' };
 
-    const match = password === user.password;
+    const match = bcrypt.compareSync(password, user.password);
 
     if (!match) return { message: 'Incorrect email or password' };
 
