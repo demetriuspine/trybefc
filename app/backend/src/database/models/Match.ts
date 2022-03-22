@@ -51,4 +51,5 @@ Match.init({
   modelName: 'match',
   timestamps: false,
   underscored: true,
+  tableName: 'matchs',
 });
