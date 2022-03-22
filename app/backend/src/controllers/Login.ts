@@ -26,6 +26,7 @@ export default class LoginCOntroller {
       const { email } = req;
       const data = email as string;
       const user = await LoginService.validateLogin(data);
+
       if (user) res.status(200).json(user.role);
     } catch (error) {
       return res.status(500).json(error);
