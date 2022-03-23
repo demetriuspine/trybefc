@@ -1,58 +1,65 @@
 import { MatchInterface } from '../interfaces/Interfaces';
 import Club from '../database/models/Club';
 import Match from '../database/models/Match';
+import ClubService from './Club';
 
 export default class MatchService {
-  static async getMatches() {
-    const matches = await Match.findAll(
-      {
+  static async getAll(status?: boolean) {
+    let matches: Match[];
+    if (status === undefined) {
+      matches = await Match.findAll({ include: [
+        { model: Club, as: 'homeClub', attributes: ['clubName'] },
+        { model: Club, as: 'awayClub', attributes: ['clubName'] },
+      ],
+      });
+    } else {
+      matches = await Match.findAll({
+        where: { inProgress: status },
         include: [
           { model: Club, as: 'homeClub', attributes: ['clubName'] },
           { model: Club, as: 'awayClub', attributes: ['clubName'] },
         ],
-      },
+      });
+    }
+
+    return matches;
+  }
+
+  static async checkTeamExistence(idHomeTeam: string, idAwayTeam: string) {
+    const homeTeam = await ClubService.getById(idHomeTeam);
+    const awayTeam = await ClubService.getById(idAwayTeam);
+    if (!homeTeam || !awayTeam) {
+      return { message: 'There is no team with such id!' };
+    }
+    return { homeTeam, awayTeam };
+  }
+
+  static async createMatch(data: MatchInterface) {
+    const { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress } = data;
+
+    const checkTeams = await MatchService.checkTeamExistence(homeTeam, awayTeam);
+
+    if (checkTeams.message) return checkTeams;
+
+    const createdMatch = await Match.create(
+      { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress },
     );
 
-    return matches;
+    return { id: createdMatch.id, homeTeam, homeTeamGoals, awayTeam, awayTeamGoals, inProgress };
   }
 
-  static async getByStatus(inProgress: boolean) {
-    const matches = await Match.findAll({
-      where: { inProgress },
-      include: [
-        { model: Club, as: 'homeClub', attributes: ['clubName'] },
-        { model: Club, as: 'awayClub', attributes: ['clubName'] },
-      ],
+  static async updateStatus(id: number | string) {
+    const updatedMatch = await Match.update({ inProgress: false }, {
+      where: { id },
     });
-
-    return matches;
+    return updatedMatch;
   }
 
-  static async create(match: MatchInterface) {
-    const { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress } = match;
-    const newMatch = await Match
-      .create({ homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress });
-    return { id: newMatch.id, homeTeam, homeTeamGoals, awayTeam, awayTeamGoals, inProgress };
-  }
-
-  static async finishMatch(id: string, status: boolean) {
-    const progress = { inProgress: status };
-    await Match
-      .update(progress, { where: { id } });
-    return progress;
-  }
-
-  static async updateMatch(
-    id: string | number,
-    homeTeamGoals: string | number,
-    awayTeamGoals: string | number,
-  ) {
-    const score = { homeTeamGoals, awayTeamGoals };
-    await Match
-      .update(
-        score,
-        { where: { id } },
-      );
-    return score;
+  static async updateMatchGoals(id: number | string, homeGoals: number, awayGoals: number) {
+    const updatedMatchGoals = await Match.update(
+      { homeTeamGoals: homeGoals, awayTeamGoals: awayGoals },
+      { where: { id } },
+    );
+    return updatedMatchGoals;
   }
 }
