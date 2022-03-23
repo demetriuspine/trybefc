@@ -10,8 +10,8 @@ export interface RequestEmail extends Request {
 }
 
 export interface MatchInterface {
-  homeTeam: number;
-  awayTeam: number;
+  homeTeam: string;
+  awayTeam: string;
   homeTeamGoals: number;
   awayTeamGoals: number;
   inProgress: boolean;
