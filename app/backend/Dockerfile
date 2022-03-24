@@ -1,13 +1,11 @@
 FROM node:16-alpine
 
-EXPOSE 3001
-
-WORKDIR /app/backend
-
-COPY package*.json ./
-
-RUN npm install
+WORKDIR /backend
 
 COPY . .
 
-ENTRYPOINT ["npm", "start"]
+RUN npm install
+
+EXPOSE 3001
+
+CMD ["npm", "start"]
