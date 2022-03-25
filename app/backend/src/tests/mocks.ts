@@ -166,7 +166,6 @@ export const matchsIsInProgressMock  = [
     }
   }]
 
-
 export const createMatchMock = {
   id: 1,
   homeTeam: 1,
