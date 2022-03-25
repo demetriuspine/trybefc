@@ -13,7 +13,7 @@ export default class LeaderboardService {
       if (match.homeTeamGoals > match.awayTeamGoals) {
         totalPoints += 3;
         totalVictories += 1;
-      } if (match.homeTeamGoals === match.awayTeamGoals) {
+      } else if (match.homeTeamGoals === match.awayTeamGoals) {
         totalPoints += 1;
         totalDraws += 1;
       } else {
