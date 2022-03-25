@@ -169,9 +169,9 @@ export const matchsIsInProgressMock  = [
 
 export const createMatchMock = {
   id: 1,
-  homeTeam: 16,
-  homeTeamGoals: 2,
+  homeTeam: 1,
+  homeTeamGoals: 0,
   awayTeam: 8,
-  awayTeamGoals: 2,
+  awayTeamGoals: 4,
   inProgress: true,
 }
