@@ -105,3 +105,73 @@ export const oneClubMock = {
   "id": 4,
   "clubName": "Corinthians"
 }
+
+export const matchsMock  = [
+  {
+    "id": 1,
+    "homeTeam": 11,
+    "homeTeamGoals": 7,
+    "awayTeam": 4,
+    "awayTeamGoals": 1,
+    "inProgress": false,
+    "homeClub": {
+      "clubName": "Corinthians"
+    },
+    "awayClub": {
+      "clubName": "Santos"
+    }
+  },
+  {
+    "id": 41,
+    "homeTeam": 11,
+    "homeTeamGoals": 6,
+    "awayTeam": 9,
+    "awayTeamGoals": 1,
+    "inProgress": true,
+    "homeClub": {
+      "clubName": "Corinthians"
+    },
+    "awayClub": {
+      "clubName": "São Paulo"
+    }
+}]
+
+export const matchsIsInProgressMock  = [
+  {
+    "id": 1,
+    "homeTeam": 1,
+    "homeTeamGoals": 5,
+    "awayTeam": 2,
+    "awayTeamGoals": 0,
+    "inProgress": true,
+    "homeClub": {
+      "clubName": "Corinthians"
+    },
+    "awayClub": {
+      "clubName": "São Paulo"
+    }
+  },
+  {
+    "id": 2,
+    "homeTeam": 3,
+    "homeTeamGoals": 6,
+    "awayTeam": 4,
+    "awayTeamGoals": 2,
+    "inProgress": true,
+    "homeClub": {
+      "clubName": "Mirassol"
+    },
+    "awayClub": {
+      "clubName": "Palmeiras"
+    }
+  }]
+
+
+export const createMatchMock = {
+  id: 1,
+  homeTeam: 16,
+  homeTeamGoals: 2,
+  awayTeam: 8,
+  awayTeamGoals: 2,
+  inProgress: true,
+}
